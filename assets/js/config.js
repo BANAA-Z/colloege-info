@@ -1,0 +1,60 @@
+// config.js - 全局配置中心（纯数据，所有页面共用）
+// ==============================================
+// 1. 导航站数据（考研/考公/校招/工具，完全沿用你原有结构）
+// ==============================================
+export const NAV_DATA = {
+  // 考研板块
+  kaoyan: [
+    { name: "中国研究生招生信息网", url: "https://yz.chsi.com.cn/" },
+    { name: "院校研究生官网", url: "" },
+    { name: "考研报录比查询", url: "" },
+    { name: "专业课真题资源", url: "" },
+    { name: "历年考研分数线", url: "" },
+    { name: "考研备考经验", url: "" }
+  ],
+  // 考公板块
+  kaogong: [
+    { name: "国家公务员局", url: "https://www.scs.gov.cn/" },
+    { name: "各省人事考试网", url: "" },
+    { name: "公务员专业分类目录", url: "" },
+    { name: "历年职位表下载", url: "" },
+    { name: "国考省考报名入口", url: "" },
+    { name: "公考备考资料", url: "" }
+  ],
+  // 国企校招板块
+  xiaozhao: [
+    { name: "国家电网招聘平台", url: "https://zhaopin.sgcc.com.cn/" },
+    { name: "中车集团招聘官网", url: "" },
+    { name: "主流车企招聘官网", url: "" },
+    { name: "国企全招聘官方平台", url: "" },
+    { name: "高校就业信息网", url: "" },
+    { name: "校招笔试面试经验", url: "" }
+  ],
+  // 硬核工具板块
+  tools: [
+    { name: "学术文献下载", url: "" },
+    { name: "PDF全能处理", url: "" },
+    { name: "简历模板大全", url: "" },
+    { name: "英语四六级工具", url: "" },
+    { name: "网盘资源搜索", url: "" },
+    { name: "在线编程工具", url: "" }
+  ],
+  //B站学习资源
+  bilibili: []
+};
+
+// ==============================================
+// 2. 全局站点配置
+// ==============================================
+
+// config.js 中需配置的 Firebase 信息
+export const SITE_CONFIG = {
+  firebase: {
+    apiKey: "AIzaSyCw-qOrplD8k2rgU9ko1kMsh4YFOn__wK4",
+    authDomain: "college-info-913c0.firebaseapp.com",
+    projectId: "college-info-913c0",
+    storageBucket: "college-info-913c0.firebasestorage.app",
+    messagingSenderId: "1081486404623",
+    appId: "1:1081486404623:web:f2706e09a031a0d212077a"
+  }
+};
