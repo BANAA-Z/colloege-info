@@ -1,4 +1,4 @@
-// fold.js - 最终版：所有板块统一折叠逻辑（含B站学习资源）
+// fold.js - 最终版：导航链接下方永久显示描述
 import { NAV_DATA } from "./config.js";
 
 // XSS防护
@@ -16,6 +16,7 @@ const renderNavSection = (list, containerId, title) => {
   const container = document.getElementById(containerId);
   if (!container) return;
 
+  // 每个链接包装成一个带描述的item
   container.innerHTML = `
     <div class="fold-header">
       <h3>${escapeHtml(title)}</h3>
@@ -23,9 +24,12 @@ const renderNavSection = (list, containerId, title) => {
     </div>
     <div class="fold-content">
       ${list.map(item => `
-        <a href="${escapeHtml(item.url)}" target="_blank" class="nav-card">
-          ${escapeHtml(item.name)}
-        </a>
+        <div class="nav-item">
+          <a href="${escapeHtml(item.url)}" target="_blank" class="nav-card">
+            ${escapeHtml(item.name)}
+          </a>
+          <p class="nav-desc">${escapeHtml(item.desc || '')}</p>
+        </div>
       `).join("")}
     </div>
   `;

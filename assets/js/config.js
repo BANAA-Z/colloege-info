@@ -23,7 +23,7 @@ export const NAV_DATA = {
   ],
   // 国企校招板块
   xiaozhao: [
-    { name: "国家电网招聘平台", url: "https://zhaopin.sgcc.com.cn/" },
+    { name: "国家电网招聘平台", url: "https://zhaopin.sgcc.com.cn/" ,desc:"好用不错京二胡凤凰湖得到大多数"},
     { name: "中车集团招聘官网", url: "" },
     { name: "主流车企招聘官网", url: "" },
     { name: "国企全招聘官方平台", url: "" },
@@ -33,7 +33,7 @@ export const NAV_DATA = {
   // 硬核工具板块
   tools: [
     { name: "学术文献下载", url: "" },
-    { name: "PDF全能处理", url: "" },
+    { name: "PDF全能处理", url: "https://www.ilovepdf.com/" },
     { name: "简历模板大全", url: "" },
     { name: "英语四六级工具", url: "" },
     { name: "网盘资源搜索", url: "" },
@@ -47,14 +47,4 @@ export const NAV_DATA = {
 // 2. 全局站点配置
 // ==============================================
 
-// config.js 中需配置的 Firebase 信息
-export const SITE_CONFIG = {
-  firebase: {
-    apiKey: "AIzaSyCw-qOrplD8k2rgU9ko1kMsh4YFOn__wK4",
-    authDomain: "college-info-913c0.firebaseapp.com",
-    projectId: "college-info-913c0",
-    storageBucket: "college-info-913c0.firebasestorage.app",
-    messagingSenderId: "1081486404623",
-    appId: "1:1081486404623:web:f2706e09a031a0d212077a"
-  }
-};
+
