@@ -16,7 +16,7 @@
         .message-item { background: #f8fafc; padding: 15px; margin: 10px 0; border-radius: 8px; position: relative; }
         .btn-group { position: absolute; top: 10px; right: 10px; display: flex; gap: 8px; }
         .del-btn { background: #ef4444; color: #fff; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; }
-        .pass-btn { background: #22c55e; color: #fff; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; }
+        .pass-btn { background: #22c25e; color: #fff; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; }
         .stats-card { background: #fff; padding: 20px; border-radius: 8px; margin: 10px 0; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
     </style>
 </head>
@@ -30,7 +30,7 @@
     <div class="admin-panel" id="adminPanel">
         <h1>📊 管理员后台</h1>
         <div class="stats-card">
-            <h3>网站访问统计（Firebase）</h3>
+            <h3>网站访问统计（腾讯云）</h3>
             <div id="statsContent">加载中...</div>
         </div>
         <div class="stats-card">
@@ -39,19 +39,7 @@
         </div>
     </div>
 
-    <!-- 1. 引入 Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-
-    <!-- 2. 引入你的 config.js（包含 Firebase 配置） -->
-    <script type="module">
-        import { SITE_CONFIG } from './assets/js/config.js';
-        // 初始化 Firebase
-        firebase.initializeApp(SITE_CONFIG.firebase);
-        window.fbDB = firebase.firestore();
-    </script>
-
-    <!-- 3. 腾讯云留言相关 -->
+    <!-- 腾讯云 SDK -->
     <script src="https://static.cloudbase.net/cloudbase-js-sdk/latest/cloudbase.full.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/blueimp-md5@2.19.0/js/md5.min.js"></script>
 
@@ -61,11 +49,12 @@
         const REGION = "ap-shanghai";
         const ADMIN_PASSWORD_MD5 = "9b5e3a48e3db7e5eadef326baef4317a";
 
-        let tcDB; // 腾讯云数据库实例
+        let tcDB;
+        let app;
 
-        // 初始化腾讯云（仅用于留言）
+        // 初始化腾讯云
         async function initTC() {
-            const app = cloudbase.init({ env: ENV_ID, region: REGION });
+            app = cloudbase.init({ env: ENV_ID, region: REGION });
             await app.auth().signInAnonymously();
             tcDB = app.database();
         }
@@ -85,69 +74,71 @@
             }
         };
 
-        // 加载所有数据（Firebase统计 + 腾讯云留言）
+        // 加载所有数据
         async function loadAllData() {
-    // 第一步：先加载留言（先出来）
-    try {
-        const msgRes = await tcDB.collection("messages").orderBy("createTime", "desc").get();
-        const messages = msgRes.data || [];
-        const list = document.getElementById("messageList");
-        list.innerHTML = "";
+            // 1. 加载留言
+            try {
+                const msgRes = await tcDB.collection("messages").orderBy("createTime", "desc").get();
+                const messages = msgRes.data || [];
+                const list = document.getElementById("messageList");
+                list.innerHTML = "";
 
-        messages.forEach(msg => {
-            // 格式化时间
-            let formatTime = "未知时间";
-            if (msg.createTime) {
-                const d = new Date(msg.createTime);
-                const y = d.getFullYear();
-                const m = String(d.getMonth() + 1).padStart(2, "0");
-                const day = String(d.getDate()).padStart(2, "0");
-                const h = String(d.getHours()).padStart(2, "0");
-                const min = String(d.getMinutes()).padStart(2, "0");
-                formatTime = `${y}-${m}-${day} ${h}:${min}`;
+                messages.forEach(msg => {
+                    let formatTime = "未知时间";
+                    if (msg.createTime) {
+                        const d = new Date(msg.createTime);
+                        const y = d.getFullYear();
+                        const m = String(d.getMonth() + 1).padStart(2, "0");
+                        const day = String(d.getDate()).padStart(2, "0");
+                        const h = String(d.getHours()).padStart(2, "0");
+                        const min = String(d.getMinutes()).padStart(2, "0");
+                        formatTime = `${y}-${m}-${day} ${h}:${min}`;
+                    }
+
+                    list.innerHTML += `
+                    <div class="message-item">
+                        <div style="display:flex;justify-content:space-between;align-items:center;">
+                            <strong>${msg.name || "匿名"}</strong>
+                            <small style="color:#999;">${formatTime}</small>
+                        </div>
+                        <p style="margin:8px 0;">${msg.content || ""}</p>
+                        <small>状态：${msg.status === "approved" ? "✅ 已通过" : "⏳ 待审核"}</small>
+                        <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:10px;">
+                            <button class="pass-btn" onclick="passMsg('${msg._id}')" ${msg.status === "approved" ? "disabled" : ""}>通过</button>
+                            <button class="del-btn" onclick="delMsg('${msg._id}')">删除</button>
+                        </div>
+                    </div>`;
+                });
+            } catch (err) {
+                console.error("加载留言失败:", err);
+                document.getElementById("messageList").innerHTML = "加载失败";
             }
 
-            list.innerHTML += `
-            <div class="message-item">
-                <div style="display:flex;justify-content:space-between;align-items:center;">
-                    <strong>${msg.name || "匿名"}</strong>
-                    <small style="color:#999;">${formatTime}</small>
-                </div>
-                <p style="margin:8px 0;">${msg.content || ""}</p>
-                <small>状态：${msg.status === "approved" ? "✅ 已通过" : "⏳ 待审核"}</small>
-                <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:10px;">
-                    <button class="pass-btn" onclick="passMsg('${msg._id}')" ${msg.status === "approved" ? "disabled" : ""}>通过</button>
-                    <button class="del-btn" onclick="delMsg('${msg._id}')">删除</button>
-                </div>
-            </div>`;
-        });
-    } catch (err) {
-        console.error("加载留言失败:", err);
-        document.getElementById("messageList").innerHTML = "加载失败";
-    }
+            // 2. 加载统计（和主站一致）
+            try {
+                const statsRes = await tcDB.collection("stats").doc("site").get();
+                let rawData = statsRes.data;
+                let data = Array.isArray(rawData) ? rawData[0] : rawData;
 
-    // 第二步：留言加载完后，再加载统计（异步，不卡界面）
-    setTimeout(async () => {
-        try {
-            const statsRes = await fbDB.collection("stats").doc("site").get();
-            const stats = statsRes.data() || {};
-            document.getElementById("statsContent").innerHTML =
-                `总访问：${stats.totalViews || 0}　独立访客：${stats.uniqueVisitors || 0}`;
-        } catch (err) {
-            console.error("加载统计失败:", err);
-            document.getElementById("statsContent").innerHTML = "加载失败";
+                const total = data?.totalViews ?? 0;
+                const visitors = (data?.uniqueVisitors ?? []).length;
+
+                document.getElementById("statsContent").innerHTML =
+                `总访问：${total}　独立访客：${visitors}`;
+            } catch (err) {
+                console.error("加载统计失败:", err);
+                document.getElementById("statsContent").innerHTML = "加载失败";
+            }
         }
-    }, 100); // 加个100ms延迟，确保留言已经渲染完成
-}
 
-        // 审核留言
+        // 审核
         async function passMsg(id) {
             await tcDB.collection("messages").doc(id).update({ status: "approved" });
             alert("✅ 已通过");
             await loadAllData();
         }
 
-        // 删除留言
+        // 删除
         async function delMsg(id) {
             if (!confirm("确定删除？")) return;
             await tcDB.collection("messages").doc(id).remove();
