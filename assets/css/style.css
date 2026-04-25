@@ -109,6 +109,11 @@ h1 {
   box-shadow: 0 4px 20px rgba(0, 20, 60, 0.06);
   border: 1px solid rgba(255, 255, 255, 0.3);
 }
+/* 单独给B站折叠内容关闭网格，全屏宽 */
+#bilibili-section .fold-content {
+  display: block !important;
+  gap: 0 !important;
+}
 
 .fold-content.fold-open {
   max-height: 1200px;
