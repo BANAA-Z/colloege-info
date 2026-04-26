@@ -398,6 +398,7 @@ h1 {
   padding: 30px 15px;
   z-index: 999;
   box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
 }
 
 .left-sidebar h3 {
@@ -405,6 +406,7 @@ h1 {
   margin-bottom: 25px;
   font-size: 16px;
   color: #3b82f6;
+  transition: color 0.3s ease;
 }
 
 .sidebar-item {
@@ -415,7 +417,7 @@ h1 {
   text-decoration: none;
   color: #333;
   font-size: 14px;
-  transition: 0.2s ease;
+  transition: all 0.2s ease;
 }
 
 .sidebar-item:hover {
@@ -433,11 +435,23 @@ html {
   scroll-behavior: smooth;
 }
 
-/* 暗黑模式适配 */
+/* ========== 🔥 终极修复：按钮切换暗黑模式 ========== */
+html.dark .left-sidebar {
+  background: rgba(31, 41, 55, 0.95) !important;
+  border-right-color: rgba(55, 65, 81, 0.5) !important;
+}
+html.dark .sidebar-item {
+  color: #e5e7eb !important;
+}
+html.dark .left-sidebar h3 {
+  color: #60a5fa !important;
+}
+
+/* ========== 系统暗黑模式 ========== */
 @media (prefers-color-scheme: dark) {
   .left-sidebar {
-    background: rgba(31, 41, 55, 0.9);
-    border-right-color: rgba(55, 65, 81, 0.4);
+    background: rgba(31, 41, 55, 0.95);
+    border-right-color: rgba(55, 65, 81, 0.5);
   }
   .sidebar-item {
     color: #e5e7eb;
