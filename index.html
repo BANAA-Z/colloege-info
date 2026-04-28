@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="assets/css/style.css">
     <link rel="stylesheet" href="assets/css/dark.css">
     <style>
-        .visit-info{margin:10px 0;color:#666;}
+        .visit-info{margin:10px 0;color:#666; text-align:center;}
         .message-list { margin-top: 20px; }
         .message-item {
             background: #f9fafb;
@@ -43,79 +43,58 @@
     <a href="#xiaozhao-section" class="sidebar-item">💼 校招信息</a>
     <a href="#academic-section" class="sidebar-item">🔭 学术研究</a>
     <a href="#tools-section" class="sidebar-item">🔧 实用工具</a>
-   <!-- <a href="#bilibili-section" class="sidebar-item">📺 B站学习</a>  -->
     <a href="#message-section" class="sidebar-item">💬 留言板</a>
 </div>
 
-    <div class="container">
-        <h1>大学生信息差情报导航</h1>
-        <div class="visit-info">
-            本站总访问量：<span id="visit-count">0</span>
-            &nbsp;&nbsp;|&nbsp;&nbsp;
-            独立访客数：<span id="visitor-count">0</span>
-        </div>
+<div class="container">
+    <h1>大学生信息差情报导航</h1>
 
-        <button id="darkModeToggle" style="position: fixed; top: 20px; right: 20px; z-index: 999;">🌙 暗黑模式</button>
+    <!-- 新版访客统计 -->
+    <div id="visitCount" style="text-align:center;color:#666;margin:1rem 0;"></div>
 
-        <div class="search-box">
-            <input type="text" id="searchInput" placeholder="搜索考研/考公/校招/工具...">
-            <div id="searchResult"></div>
-        </div>
+    <button id="darkModeToggle" style="position: fixed; top: 20px; right: 20px; z-index: 999;">🌙 暗黑模式</button>
 
-        <!-- 保持你原本的板块id不变！！ -->
-         <div id="need-section" class="nav-section"></div>
-        <div id="kaoyan-section" class="nav-section"></div>
-        <div id="kaogong-section" class="nav-section"></div>
-        <div id="xiaozhao-section" class="nav-section"></div>
-        <div id="academic-section" class="nav-section"></div>
-        <div id="tools-section" class="nav-section"></div>
-        <section id="bilibili-section" class="nav-section"></section>
-
-        <section id="message-section" class="message-section">
-            <h2>💬 留言板</h2>
-            <div class="message-input">
-                <input type="text" id="nameInput" placeholder="你的昵称" maxlength="20">
-                <textarea id="contentInput" placeholder="写下你的留言、建议或问题吧~" maxlength="500"></textarea>
-                <button id="submitBtn">发布留言</button>
-            </div>
-            <div id="messageList" class="message-list"></div>
-        </section>
+    <div class="search-box">
+        <input type="text" id="searchInput" placeholder="搜索考研/考公/校招/工具...">
+        <div id="searchResult"></div>
     </div>
 
-    <footer style="margin-top: 60px; padding: 20px; text-align: center; color: #6b7280; font-size: 14px; border-top: 1px solid rgba(0,0,0,0.05);">
-        <p>抖音号：<a href="https://v.douyin.com/TiD_xFNp_3M/ 0@0.com :5pm" target="_blank" style="color: #3b82f6; text-decoration: none;">@上岸情报站</a></p>
-        <p style="margin-top: 8px;">本站内容仅供学习交流使用，侵删</p>
-    </footer>
+    <div id="need-section" class="nav-section"></div>
+    <div id="kaoyan-section" class="nav-section"></div>
+    <div id="kaogong-section" class="nav-section"></div>
+    <div id="xiaozhao-section" class="nav-section"></div>
+    <div id="academic-section" class="nav-section"></div>
+    <div id="tools-section" class="nav-section"></div>
+    <section id="bilibili-section" class="nav-section"></section>
 
-    <!-- 腾讯云SDK 优先加载 -->
-    <script src="https://static.cloudbase.net/cloudbase-js-sdk/latest/cloudbase.full.js"></script>
+    <!-- 新版留言板 -->
+    <section id="message-section" class="message-section">
+        <h2>💬 留言板</h2>
+        <div class="message-input">
+            <input type="text" id="msgName" placeholder="昵称（选填）" maxlength="20">
+            <textarea id="msgText" placeholder="写下你的留言、建议或问题吧~" maxlength="500"></textarea>
+            <button id="sendBtn">提交留言</button>
+        </div>
+        <div id="msgList" class="message-list"></div>
+    </section>
+</div>
 
-    <script type="module" src="assets/js/config.js"></script>
-    <script type="module" src="assets/js/fold.js"></script>
-    <script type="module" src="assets/js/search.js"></script>
-    <script type="module" src="assets/js/md-loader.js"></script>
-    <script type="module" src="assets/js/dark-mode.js"></script>
-    <script type="module" src="assets/js/logistics.js"></script>
-    <script type="module" src="assets/js/tcb-stats.js"></script>
+<footer style="margin-top: 60px; padding: 20px; text-align: center; color: #6b7280; font-size: 14px; border-top: 1px solid rgba(0,0,0,0.05);">
+    <p>抖音号：<a href="https://v.douyin.com/TiD_xFNp_3M/" target="_blank" style="color: #3b82f6; text-decoration: none;">@上岸情报站</a></p>
+    <p style="margin-top: 8px;">本站内容仅供学习交流使用，侵删</p>
+</footer>
 
-    <script type="module">
-        import { initCloudbase, updateViewStat, loadMessage, postMessage } from "./assets/js/cloudbase-service.js";
-        window.addEventListener("load", async () => {
-            await initCloudbase();
-            await updateViewStat();
-            await loadMessage();
-        });
+<!-- 新版 JS -->
+<script type="module" src="assets/js/config.js"></script>
+<script type="module" src="assets/js/fold.js"></script>
+<script type="module" src="assets/js/search.js"></script>
+<script type="module" src="assets/js/md-loader.js"></script>
+<script type="module" src="assets/js/dark-mode.js"></script>
+<script type="module" src="assets/js/logistics.js"></script>
 
-        document.getElementById("submitBtn").addEventListener("click", async () => {
-            const name = document.getElementById("nameInput").value.trim() || "匿名";
-            const content = document.getElementById("contentInput").value.trim();
-            if (!content) return alert("请输入留言内容");
-            await postMessage(name, content);
-            alert("留言提交成功，等待审核！");
-            document.getElementById("nameInput").value = "";
-            document.getElementById("contentInput").value = "";
-            loadMessage();
-        });
-    </script>
+<!-- 新留言 + 访客统计 -->
+<script src="assets/js/msg-front.js"></script>
+<script src="assets/js/visit.js"></script>
+
 </body>
 </html>
