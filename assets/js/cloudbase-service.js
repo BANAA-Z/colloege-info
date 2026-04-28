@@ -1,4 +1,4 @@
-// 从 init 导入已经配置好中转的 app、db、auth
+// 【关键】：从 cloudbase-init.js 导入已经配置好中转的实例
 import { app, auth, db } from './cloudbase-init.js';
 
 // 初始化匿名登录
@@ -19,7 +19,7 @@ export async function loadMessage() {
       .get();
 
     const listDom = document.getElementById("messageList");
-    if(!listDom) return;
+    if (!listDom) return;
     listDom.innerHTML = "";
 
     res.data.forEach(item => {
