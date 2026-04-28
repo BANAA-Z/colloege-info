@@ -77,9 +77,11 @@ document.addEventListener("DOMContentLoaded", () => {
   renderNavSection(NAV_DATA.kaoyan, "kaoyan-section", "考研");
   renderNavSection(NAV_DATA.kaogong, "kaogong-section", "考公");
   renderNavSection(NAV_DATA.xiaozhao, "xiaozhao-section", "国企校招");
+  renderNavSection(NAV_DATA.academic, "academic-section", "学术研究");
   renderNavSection(NAV_DATA.tools, "tools-section", "硬核工具");
+  
 
 
   // 渲染B站学习资源板块
-  renderBilibiliSection("bilibili-section", "B站学习资源");
+  //renderBilibiliSection("bilibili-section", "B站学习资源");
 });
