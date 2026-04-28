@@ -1,5 +1,10 @@
-// 【关键】：从 cloudbase-init.js 导入已经配置好中转的实例
-import { app, auth, db } from './cloudbase-init.js';
+// assets/js/cloudbase-service.js
+const ENV_ID = "college-info-d8gllm2mv8ef87c41";
+const REGION = "ap-shanghai";
+
+const app = cloudbase.init({ env: ENV_ID, region: REGION });
+const auth = app.auth();
+export const db = app.database();
 
 // 初始化匿名登录
 export async function initCloudbase() {
@@ -19,7 +24,6 @@ export async function loadMessage() {
       .get();
 
     const listDom = document.getElementById("messageList");
-    if (!listDom) return;
     listDom.innerHTML = "";
 
     res.data.forEach(item => {

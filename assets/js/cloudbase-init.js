@@ -1,16 +1,12 @@
+// 环境ID直接写死，不再依赖config.js
 const ENV_ID = "college-info-d8gllm2mv8ef87c41";
-const REGION = "ap-shanghai";
 
-// 只初始化一次，强制走Worker中转
-const app = cloudbase.init({
-  env: ENV_ID,
-  region: REGION,
-  apiHost: "https://nameless-frog-e039.x82717006.workers.dev"
-});
-
+// 新版 CloudBase SDK 初始化
+const app = cloudbase.init({ env: ENV_ID });
 const auth = app.auth();
 const db = app.database();
 
+// 统一匿名登录，所有模块都要调用它
 export async function initAuth() {
   await auth.signInAnonymously();
 }
