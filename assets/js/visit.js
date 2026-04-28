@@ -1,60 +1,64 @@
-// 访客统计｜总访问次数 + IP唯一访问人数
-const VISIT_BIN = "https://api.jsonbin.io/v3/b/671ca991e41b4b72a8b4d5c9";
-const VISIT_KEY = "$2a$10$OXQd1W6y1u5F5c0G7R0y/.m5t0d0X9Z8w7V6b5N4M3K2J1H0G";
-
-const initData = {
-  totalView: 0,
-  ipList: []
+const GIT_CONFIG = {
+  owner: "BANAA-Z",
+  repo: "colloege-info",
+  statIssueId: 2
 };
 
-async function getVisitData() {
+// 读取访问数据
+async function getStat() {
   try {
-    const res = await fetch(VISIT_BIN);
-    const json = await res.json();
-    return json.record || initData;
+    const res = await fetch(`https://api.github.com/repos/${GIT_CONFIG.owner}/${GIT_CONFIG.repo}/issues/${GIT_CONFIG.statIssueId}`);
+    const data = await res.json();
+    return JSON.parse(data.body) || { totalView: 0, userList: [] };
   } catch (e) {
-    return initData;
+    return { totalView: 0, userList: [] };
   }
 }
 
-async function saveVisitData(data) {
-  await fetch(VISIT_BIN, {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-      "X-Master-Key": VISIT_KEY
+// 保存只有你自己能操作
+async function saveStat(newData) {
+  const token = localStorage.getItem("git_admin_token");
+  if(!token) return;
+
+  await fetch(`https://api.github.com/repos/${GIT_CONFIG.owner}/${GIT_CONFIG.repo}/issues/${GIT_CONFIG.statIssueId}`,{
+    method:"PATCH",
+    headers:{
+      "Authorization":`token ${token}`,
+      "Content-Type":"application/json"
     },
-    body: JSON.stringify(data)
+    body:JSON.stringify({ body: JSON.stringify(newData) })
   });
 }
 
-async function getUserIP() {
-  try {
-    const res = await fetch("https://api.ip.sb/geoip");
-    const info = await res.json();
-    return info.ip;
-  } catch (e) {
-    return "unk_" + Math.random().toString(36).slice(2);
+// 生成临时唯一标识（替代IP）
+function getUid(){
+  let uid = localStorage.getItem("visit_uid");
+  if(!uid){
+    uid = "u_" + Math.random().toString(36).slice(2);
+    localStorage.setItem("visit_uid",uid);
+  }
+  return uid;
+}
+
+async function initVisit() {
+  const data = await getStat();
+  const uid = getUid();
+
+  // 总访问次数+1
+  data.totalView++;
+  // 独立人数
+  if(!data.userList.includes(uid)){
+    data.userList.push(uid);
+  }
+
+  // 仅你浏览器会执行保存
+  await saveStat(data);
+
+  // 前台展示
+  const el = document.getElementById("visitCount");
+  if(el){
+    el.innerHTML = `一共访问次数：${data.totalView} 次 &nbsp;|&nbsp; 访问人数：${data.userList.length} 人`;
   }
 }
 
-async function runVisitStat() {
-  const data = await getVisitData();
-  const ip = await getUserIP();
-
-  data.totalView += 1;
-  if (!data.ipList.includes(ip)) {
-    data.ipList.push(ip);
-  }
-
-  await saveVisitData(data);
-  renderStat(data.totalView, data.ipList.length);
-}
-
-function renderStat(viewNum, userNum) {
-  const box = document.getElementById("visitCount");
-  if (!box) return;
-  box.innerHTML = `一共访问次数：${viewNum} 次 &nbsp;|&nbsp; 访问人数：${userNum} 人`;
-}
-
-document.addEventListener("DOMContentLoaded", runVisitStat);
+document.addEventListener("DOMContentLoaded",initVisit);
