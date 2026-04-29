@@ -201,6 +201,16 @@ export const NAV_DATA = {
     url: "https://www.paperyy.com/",
     desc: "初稿查重首选，提供每日免费查重额度，适合论文修改阶段反复自查。"
   },
+  {
+    name: "国家统计局",
+    url: "https://www.stats.gov.cn/",
+    desc: "国内官方权威数据来源，可查询国民经济、行业发展、人口等宏观统计数据。"
+  },
+  {
+    name: "中国统计年鉴",
+    url: "https://www.stats.gov.cn/sj/ndsj/",
+    desc: "国家统计局官方发布的年度统计数据合集，写论文做实证分析的核心数据来源。"
+  },
  
 ],
   // 硬核工具板块
